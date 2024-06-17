@@ -29,10 +29,9 @@ const RightPanel = () => {
 
 	return (
 		<div className='hidden lg:block my-4 mx-2'>
-			<div className='bg-[#16181C] p-4 rounded-md sticky top-2'>
-				<p className='font-bold'>Who to follow</p>
+			<div className='bg-white p-4 rounded-lg shadow-lg sticky top-2'>
+				<p className='font-bold text-black mb-4'>Who to follow</p>
 				<div className='flex flex-col gap-4'>
-					{/* item */}
 					{isLoading && (
 						<>
 							<RightPanelSkeleton />
@@ -45,29 +44,30 @@ const RightPanel = () => {
 						suggestedUsers?.map((user) => (
 							<Link
 								to={`/profile/${user.username}`}
-								className='flex items-center justify-between gap-4'
+								className='flex items-center justify-between gap-4 p-2 rounded-lg hover:bg-gray-100 transition-colors'
 								key={user._id}
 							>
 								<div className='flex gap-2 items-center'>
 									<div className='avatar'>
-										<div className='w-8 rounded-full'>
-											<img src={user.profileImg || "/avatar-placeholder.png"} />
+										<div className='w-10 h-10 rounded-full overflow-hidden'>
+											<img src={user.profileImg || "/avatar-placeholder.png"} alt={user.fullName} />
 										</div>
 									</div>
 									<div className='flex flex-col'>
-										<span className='font-semibold tracking-tight truncate w-28'>
+										<span className='font-semibold tracking-tight text-black truncate w-28'>
 											{user.fullName}
 										</span>
-										<span className='text-sm text-slate-500'>@{user.username}</span>
+										<span className='text-sm text-gray-500'>@{user.username}</span>
 									</div>
 								</div>
 								<div>
 									<button
-										className='btn bg-white text-black hover:bg-white hover:opacity-90 rounded-full btn-sm'
+										className='btn bg-blue-500 text-white hover:bg-blue-600 rounded-full btn-sm px-4 py-1'
 										onClick={(e) => {
 											e.preventDefault();
 											follow(user._id);
 										}}
+										disabled={isPending}
 									>
 										{isPending ? <LoadingSpinner size='sm' /> : "Follow"}
 									</button>
@@ -79,4 +79,5 @@ const RightPanel = () => {
 		</div>
 	);
 };
+
 export default RightPanel;
