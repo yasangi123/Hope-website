@@ -4,42 +4,50 @@ import Posts from "../../components/common/Posts";
 import CreatePost from "./CreatePost";
 
 const HomePage = () => {
-	const [feedType, setFeedType] = useState("forYou");
+  // State to manage the type of feed (forYou or following)
+  const [feedType, setFeedType] = useState("forYou");
 
-	return (
-		<>
-			<div className='flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen'>
-				{/* Header */}
-				<div className='flex w-full border-b border-gray-700'>
-					<div
-						className={
-							"flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
-						}
-						onClick={() => setFeedType("forYou")}
-					>
-						For you
-						{feedType === "forYou" && (
-							<div className='absolute bottom-0 w-10  h-1 rounded-full bg-primary'></div>
-						)}
-					</div>
-					<div
-						className='flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative'
-						onClick={() => setFeedType("following")}
-					>
-						Following
-						{feedType === "following" && (
-							<div className='absolute bottom-0 w-10  h-1 rounded-full bg-primary'></div>
-						)}
-					</div>
-				</div>
+  return (
+    <>
+      {/* Main container */}
+      <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">
+        {/* Header */}
+        <div className="flex w-full border-b border-gray-700">
+          {/* For You tab */}
+          <div
+            className={`flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative ${
+              feedType === "forYou" ? "text-primary" : "text-white"
+            }`}
+            onClick={() => setFeedType("forYou")}
+          >
+            For you
+            {feedType === "forYou" && (
+              <div className="absolute bottom-0 w-10 h-1 rounded-full bg-primary"></div>
+            )}
+          </div>
 
-				{/*  CREATE POST INPUT */}
-				<CreatePost />
+          {/* Following tab */}
+          <div
+            className={`flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative ${
+              feedType === "following" ? "text-primary" : "text-white"
+            }`}
+            onClick={() => setFeedType("following")}
+          >
+            Following
+            {feedType === "following" && (
+              <div className="absolute bottom-0 w-10 h-1 rounded-full bg-primary"></div>
+            )}
+          </div>
+        </div>
 
-				{/* POSTS */}
-				<Posts feedType={feedType} />
-			</div>
-		</>
-	);
+        {/* Create Post Component */}
+        <CreatePost />
+
+        {/* Posts Component */}
+        <Posts feedType={feedType} />
+      </div>
+    </>
+  );
 };
+
 export default HomePage;

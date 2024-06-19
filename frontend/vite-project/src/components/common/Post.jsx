@@ -18,6 +18,7 @@ const Post = ({ post }) => {
 
   const formattedDate = formatPostDate(post.createdAt);
 
+  // Mutation for deleting a post
   const { mutate: deletePost, isPending: isDeleting } = useMutation({
     mutationFn: async () => {
       try {
@@ -40,6 +41,7 @@ const Post = ({ post }) => {
     },
   });
 
+  // Mutation for liking/unliking a post
   const { mutate: likePost, isPending: isLiking } = useMutation({
     mutationFn: async () => {
       try {
@@ -70,6 +72,7 @@ const Post = ({ post }) => {
     },
   });
 
+  // Mutation for posting a comment
   const { mutate: commentPost, isPending: isCommenting } = useMutation({
     mutationFn: async () => {
       try {
@@ -100,16 +103,19 @@ const Post = ({ post }) => {
     },
   });
 
+  // Function to handle delete post action
   const handleDeletePost = () => {
     deletePost();
   };
 
+  // Function to handle post comment action
   const handlePostComment = (e) => {
     e.preventDefault();
     if (isCommenting) return;
     commentPost();
   };
 
+  // Function to handle like/unlike post action
   const handleLikePost = () => {
     if (isLiking) return;
     likePost();
@@ -118,18 +124,14 @@ const Post = ({ post }) => {
   return (
     <>
       <div className="flex gap-2 items-start p-4 border-b border-gray-700">
+        {/* Avatar and User Info */}
         <div className="avatar">
-          <Link
-            to={`/profile/${postOwner.username}`}
-            className="w-8 rounded-full overflow-hidden"
-          >
-            <img
-              src={postOwner.profileImg || "/avatar-placeholder.png"}
-              alt=""
-            />
+          <Link to={`/profile/${postOwner.username}`} className="w-8 rounded-full overflow-hidden">
+            <img src={postOwner.profileImg || "/avatar-placeholder.png"} alt="" />
           </Link>
         </div>
         <div className="flex flex-col flex-1">
+          {/* Post Header */}
           <div className="flex gap-2 items-center">
             <Link to={`/profile/${postOwner.username}`} className="font-bold">
               {postOwner.fullName}
@@ -141,6 +143,7 @@ const Post = ({ post }) => {
               <span>·</span>
               <span>{formattedDate}</span>
             </span>
+            {/* Delete Post Button */}
             {isMyPost && (
               <span className="flex justify-end flex-1">
                 {!isDeleting && (
@@ -153,8 +156,10 @@ const Post = ({ post }) => {
               </span>
             )}
           </div>
+          {/* Post Content */}
           <div className="flex flex-col gap-3 overflow-hidden">
             <span>{post.text}</span>
+            {/* Post Image */}
             {post.img && (
               <img
                 src={post.img}
@@ -163,61 +168,47 @@ const Post = ({ post }) => {
               />
             )}
           </div>
+          {/* Post Actions (like, comment) */}
           <div className="flex justify-between mt-3">
             <div className="flex gap-4 items-center w-1/2 justify-between">
-              <div
-                className="flex gap-1 items-center cursor-pointer group"
-                onClick={() =>
-                  document.getElementById("comments_modal" + post._id).showModal()
-                }
-              >
+              {/* Comments */}
+              <div className="flex gap-1 items-center cursor-pointer group" onClick={() => document.getElementById("comments_modal" + post._id).showModal()}>
                 <FaRegComment className="w-4 h-4 text-slate-500 group-hover:text-sky-400" />
                 <span className="text-sm text-slate-500 group-hover:text-sky-400">
                   {post.comments.length}
                 </span>
               </div>
-              <dialog
-                id={`comments_modal${post._id}`}
-                className="modal border-none outline-none"
-              >
+              {/* Modal for displaying comments */}
+              <dialog id={`comments_modal${post._id}`} className="modal border-none outline-none">
                 <div className="modal-box rounded border border-gray-600">
                   <h3 className="font-bold text-lg mb-4">COMMENTS</h3>
                   <div className="flex flex-col gap-3 max-h-60 overflow-auto">
+                    {/* Render comments */}
                     {post.comments.length === 0 && (
                       <p className="text-sm text-slate-500">
                         No comments yet. Be the first one!
                       </p>
                     )}
                     {post.comments.map((comment) => (
-                      <div
-                        key={comment._id}
-                        className="flex gap-2 items-start"
-                      >
+                      <div key={comment._id} className="flex gap-2 items-start">
+                        {/* Commenter Avatar */}
                         <div className="avatar">
                           <div className="w-8 rounded-full">
-                            <img
-                              src={
-                                comment.user.profileImg ||
-                                "/avatar-placeholder.png"
-                              }
-                              alt=""
-                            />
+                            <img src={comment.user.profileImg || "/avatar-placeholder.png"} alt="" />
                           </div>
                         </div>
+                        {/* Comment Content */}
                         <div className="flex flex-col">
                           <div className="flex items-center gap-1">
-                            <span className="font-bold">
-                              {comment.user.fullName}
-                            </span>
-                            <span className="text-gray-700 text-sm">
-                              @{comment.user.username}
-                            </span>
+                            <span className="font-bold">{comment.user.fullName}</span>
+                            <span className="text-gray-700 text-sm">@{comment.user.username}</span>
                           </div>
                           <div className="text-sm">{comment.text}</div>
                         </div>
                       </div>
                     ))}
                   </div>
+                  {/* Form for posting a new comment */}
                   <form className="flex gap-2 items-center mt-4 border-t border-gray-600 pt-2" onSubmit={handlePostComment}>
                     <textarea
                       className="textarea w-full p-1 rounded text-md resize-none border focus:outline-none border-gray-800"
@@ -230,10 +221,12 @@ const Post = ({ post }) => {
                     </button>
                   </form>
                 </div>
+                {/* Close button for the modal */}
                 <form method="dialog" className="modal-backdrop">
                   <button className="outline-none">close</button>
                 </form>
               </dialog>
+              {/* Like Post Button */}
               <div className="flex gap-1 items-center group cursor-pointer" onClick={handleLikePost}>
                 {isLiking && <LoadingSpinner size="sm" />}
                 {!isLiked && !isLiking && (
@@ -242,11 +235,7 @@ const Post = ({ post }) => {
                 {isLiked && !isLiking && (
                   <FaRegHeart className="w-4 h-4 cursor-pointer text-pink-500" />
                 )}
-                <span
-                  className={`text-sm group-hover:text-pink-500 ${
-                    isLiked ? "text-pink-500" : "text-slate-500"
-                  }`}
-                >
+                <span className={`text-sm group-hover:text-pink-500 ${isLiked ? "text-pink-500" : "text-slate-500"}`}>
                   {post.likes.length}
                 </span>
               </div>

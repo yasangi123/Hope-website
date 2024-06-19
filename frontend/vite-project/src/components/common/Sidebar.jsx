@@ -12,6 +12,7 @@ import { BiLogOut } from "react-icons/bi";
 const Sidebar = () => {
   const queryClient = useQueryClient();
 
+  // Mutation to handle logout
   const { mutate: logout } = useMutation({
     mutationFn: async () => {
       try {
@@ -35,6 +36,7 @@ const Sidebar = () => {
     },
   });
 
+  // Query to fetch authenticated user data
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
   return (
@@ -49,33 +51,33 @@ const Sidebar = () => {
         </Link>
 
         <ul className="flex flex-col gap-3 mt-4">
+          {/* Home Link */}
           <li className="flex justify-center md:justify-start">
             <Link
               to="/"
               className="flex gap-3 items-center hover:bg-gray-800 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer"
             >
-              {/* Adjust icon and text color */}
-              <MdHomeFilled className="w-8 h-8" />
+              <MdHomeFilled className="w-8 h-8" /> {/* Adjust icon size */}
               <span className="text-lg hidden md:block">Home</span>
             </Link>
           </li>
+          {/* Notifications Link */}
           <li className="flex justify-center md:justify-start">
             <Link
               to="/notifications"
               className="flex gap-3 items-center hover:bg-gray-800 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer"
             >
-              {/* Adjust icon and text color */}
-              <IoNotifications className="w-6 h-6" />
+              <IoNotifications className="w-6 h-6" /> {/* Adjust icon size */}
               <span className="text-lg hidden md:block">Notifications</span>
             </Link>
           </li>
+          {/* Profile Link */}
           <li className="flex justify-center md:justify-start">
             <Link
               to={`/profile/${authUser?.username}`}
               className="flex gap-3 items-center hover:bg-gray-800 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer"
             >
-              {/* Adjust icon and text color */}
-              <FaUser className="w-6 h-6" />
+              <FaUser className="w-6 h-6" /> {/* Adjust icon size */}
               <span className="text-lg hidden md:block">Profile</span>
             </Link>
           </li>
@@ -102,6 +104,7 @@ const Sidebar = () => {
                 </p>
                 <p className="text-gray-500 text-sm">@{authUser?.username}</p>
               </div>
+              {/* Logout Icon */}
               <BiLogOut
                 className="w-5 h-5 cursor-pointer"
                 onClick={(e) => {

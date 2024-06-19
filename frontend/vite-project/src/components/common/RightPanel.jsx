@@ -1,30 +1,32 @@
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import useFollow from "../../hooks/useFollow";
+import useFollow from "../../hooks/useFollow"; // Custom hook to handle follow functionality
 
-import RightPanelSkeleton from "../skeletons/RightPanelSkeleton";
-import LoadingSpinner from "./LoadingSpinner";
+import RightPanelSkeleton from "../skeletons/RightPanelSkeleton"; // Skeleton component for loading state
+import LoadingSpinner from "./LoadingSpinner"; // Loading spinner component
 
 const RightPanel = () => {
+  // Fetch suggested users using useQuery from react-query
   const { data: suggestedUsers, isLoading } = useQuery({
-    queryKey: ["suggestedUsers"],
+    queryKey: ["suggestedUsers"], // Unique key for caching
     queryFn: async () => {
       try {
-        const res = await fetch("/api/users/suggested");
-        const data = await res.json();
+        const res = await fetch("/api/users/suggested"); // Fetch suggested users from API endpoint
+        const data = await res.json(); // Parse response
         if (!res.ok) {
-          throw new Error(data.error || "Something went wrong!");
+          throw new Error(data.error || "Something went wrong!"); // Throw error if response is not ok
         }
-        return data;
+        return data; // Return fetched data
       } catch (error) {
-        throw new Error(error.message);
+        throw new Error(error.message); // Throw error if fetch fails
       }
     },
   });
 
-  const { follow, isPending } = useFollow();
+  const { follow, isPending } = useFollow(); // Custom hook to handle follow functionality
 
+  // Render nothing if there are no suggested users
   if (suggestedUsers?.length === 0) return <div className="md:w-64 w-0"></div>;
 
   return (
@@ -33,6 +35,7 @@ const RightPanel = () => {
         <p className="font-bold text-white mb-4">Who to follow</p>
         <div className="flex flex-col gap-4">
           {isLoading && (
+            // Render skeleton components while loading
             <>
               <RightPanelSkeleton />
               <RightPanelSkeleton />
@@ -66,18 +69,19 @@ const RightPanel = () => {
                   </div>
                 </div>
                 <div>
+                  {/* Follow button */}
                   <button
                     className="btn bg-blue-500 text-white hover:bg-blue-600 rounded-full btn-sm px-4 py-1"
                     onClick={(e) => {
                       e.preventDefault();
-                      follow(user._id);
+                      follow(user._id); // Call follow function on button click
                     }}
-                    disabled={isPending}
+                    disabled={isPending} // Disable button if follow action is pending
                   >
-                    {isPending ? (
+                    {isPending ? ( // Show loading spinner if follow action is pending
                       <LoadingSpinner size="sm" />
                     ) : (
-                      "Follow"
+                      "Follow" // Show "Follow" text if not pending
                     )}
                   </button>
                 </div>
